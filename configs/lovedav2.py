@@ -28,12 +28,31 @@ data = dict(
             num_workers=4,
         ),
     ),
-    test=dict(
+    val=dict(
         type='LoveDALoaderV2',
         params=dict(
             # image_dir='./EarthVQA/Train/images_png',
             image_dir='/home/liw324/code/#data/EarthVQA/Val/images_png',
             mask_dir='/home/liw324/code/#data/EarthVQA/Val/masks_png',
+            transforms=Compose([
+                Normalize(mean=(123.675, 116.28, 103.53),
+                          std=(58.395, 57.12, 57.375),
+                          max_pixel_value=1, always_apply=True),
+                er.preprocess.albu.ToTensor()
+
+            ]),
+            CV=dict(k=10, i=-1),
+            training=False,
+            batch_size=4,
+            num_workers=4,
+        ),
+    ),
+    test=dict(
+        type='LoveDALoaderV2',
+        params=dict(
+            # image_dir='./EarthVQA/Train/images_png',
+            image_dir='/home/liw324/code/Segment/EarthVQA/dataset/Test',
+            # mask_dir='/home/liw324/code/#data/EarthVQA/Val/masks_png',
             transforms=Compose([
                 Normalize(mean=(123.675, 116.28, 103.53),
                           std=(58.395, 57.12, 57.375),

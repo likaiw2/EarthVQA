@@ -140,6 +140,7 @@ class SOBA(er.ERModule):
         ans_logits = self.answer_classifier(ans_feat)
 
         if self.training:
+            # print(f"ans_logits: {ans_logits.shape}    ans: {ans.shape}")
             loss_dict = self.numerical_loss(ans_logits, ans)
             return loss_dict
 
