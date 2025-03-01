@@ -17,7 +17,15 @@ def convert2str(indexes, map_dict=EarthVQADataset.QUESTION_VOC):
     return converted_str
 
 COUNT_TYPES = ['Basic Counting', 'Reasoning-based Counting']
-COUNT_QUESTIONS = ['What is the area of buildings?', 'What is the area of roads?', 'What is the area of water?', 'What is the area of barren?', 'What is the area of the forest?', 'What is the area of agriculture?', 'What is the area of playgrounds?', 'How many intersections are in this scene?', 'How many eutrophic waters are in this scene?']
+COUNT_QUESTIONS = ['What is the area of buildings?', 
+                   'What is the area of roads?', 
+                   'What is the area of water?', 
+                   'What is the area of barren?', 
+                   'What is the area of the forest?', 
+                   'What is the area of agriculture?', 
+                   'What is the area of playgrounds?', 
+                   'How many intersections are in this scene?', 
+                   'How many eutrophic waters are in this scene?']
 def evaluate_cls_fn(self, test_dataloader, config=None):
     self.model.eval()
     metric = VQA_OA_Metric(EarthVQADataset.QUESTION_TYPES, logger=self.logger)
@@ -46,6 +54,7 @@ def evaluate_cls_fn(self, test_dataloader, config=None):
             detail_metric(ans_idx, ans, ques)
             count_metric(ans_idx, ans, questypes)
             detail_count_metric(ans_idx, ans, ques)
+            
             for q_i_str, qt_i, ans_i, imagen_i, gt_i in zip(ques, questypes, ans_idx, imagen, ans):
                 qa_list = pred_dict.get(imagen_i, [])
                 instace_qa = dict()

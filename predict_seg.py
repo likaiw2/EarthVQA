@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 er.registry.register_all()
 
 
-def predict(ckpt_path, config_path='sfpnr50', save_dir='./log/test_seg_features'):
+def predict(ckpt_path, config_path='sfpnr50', save_dir=args.save_dir):
     cfg = import_config(config_path)
     #model_state_dict = load_model_state_dict_from_ckpt(ckpt_path)
     model_state_dict = torch.load(ckpt_path, map_location=lambda storage, loc: storage)

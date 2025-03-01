@@ -29,7 +29,5 @@ class RandomDropChannel(ImageOnlyTransform):
         img[:, :, masked_indexes] = 0
         return img
 
-
-
     def get_transform_init_args_names(self):
         return ("drop_rate")

@@ -5,3 +5,9 @@
 # IntelliJ project files
 .idea
 *.iml
+\#download
+*.hdf5
+*/__init__.py
+*.pyc
+*.pth
+log/*

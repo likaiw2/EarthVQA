@@ -1,17 +1,17 @@
 from albumentations import Compose, OneOf, Normalize
 from albumentations import HorizontalFlip, VerticalFlip, RandomRotate90, RandomCrop, RandomBrightnessContrast, Resize, Transpose
 import ever as er
-from ever.api.preprocess.albu import RandomDiscreteScale
+# from ever.api.preprocess.albu import RandomDiscreteScale
 
 
 data = dict(
     train=dict(
         type='LoveDALoaderV2',
         params=dict(
-            image_dir='./EarthVQA/Train/images_png',
-            mask_dir='./EarthVQA/Train/masks_png',
+            image_dir='/home/liw324/code/#data/EarthVQA/Train/images_png',
+            mask_dir='/home/liw324/code/#data/EarthVQA/Train//masks_png',
             transforms=Compose([
-                RandomDiscreteScale([0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0]),
+                # RandomDiscreteScale([0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0]),
                 RandomCrop(512, 512),
                 RandomBrightnessContrast(p=0.5),
                 HorizontalFlip(p=0.5),
@@ -31,9 +31,9 @@ data = dict(
     test=dict(
         type='LoveDALoaderV2',
         params=dict(
-            #image_dir='./EarthVQA/Train/images_png',
-            image_dir='./EarthVQA/Test/images_png',
-            mask_dir=None,
+            # image_dir='./EarthVQA/Train/images_png',
+            image_dir='/home/liw324/code/#data/EarthVQA/Val/images_png',
+            mask_dir='/home/liw324/code/#data/EarthVQA/Val/masks_png',
             transforms=Compose([
                 Normalize(mean=(123.675, 116.28, 103.53),
                           std=(58.395, 57.12, 57.375),
