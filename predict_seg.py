@@ -42,7 +42,7 @@ def predict(ckpt_path, config_path='sfpnr50', save_dir=args.save_dir):
     with torch.no_grad():
         for img, gt in tqdm(test_dataloader):
             pred, img_feat = model(img.cuda())
-            print(img_feat.shape)
+            # print(img_feat.shape)
             pred = pred.argmax(dim=1).cpu()
 
             for clsmap, feat_i, imname in zip(pred, img_feat, gt['imagen']):

@@ -20,7 +20,7 @@ python -m debugpy \
     --wait-for-client -m torch.distributed.launch \
     --nproc_per_node=${NUM_GPUS} \
     --master_port 29500 train_earthvqa.py \
-    --config_path=sfpnr50 \
-    --model_dir=./log/sfpnr50 \
+    --config_path=${config_path} \
+    --model_dir=${model_dir} \
     learning_rate.params.max_iters 40000 \
     train.num_iters 40000
