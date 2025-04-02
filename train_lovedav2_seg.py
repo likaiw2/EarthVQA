@@ -14,7 +14,7 @@ er.registry.register_all()
 train_class = 19
 
 
-def evaluate_cls_fn(self, test_dataloader, config=None):
+def evaluate_cls_fn(self, test_dataloader, config=None, test_number=5):
     self.model.eval()
     seg_metric = er.metric.PixelMetric(train_class, logdir=self._model_dir, logger=self.logger)
     vis_dir = os.path.join(self._model_dir, 'vis-{}'.format(self.checkpoint.global_step))
@@ -24,7 +24,7 @@ def evaluate_cls_fn(self, test_dataloader, config=None):
 
     with torch.no_grad():
         count = 0
-        for img, ret in tqdm(test_dataloader):
+        for img, ret in tqdm(test_dataloader,total=test_number):
             pred_seg = self.model(img, ret)
             if isinstance(pred_seg, tuple):
                 pred_seg = pred_seg[0]
@@ -42,12 +42,15 @@ def evaluate_cls_fn(self, test_dataloader, config=None):
             for pred_seg_i, imagen_i in zip(pred_seg, ret['imagen']):
                 viz_op(pred_seg_i, imagen_i.replace('jpg', 'png'))
             count += 1
-            if count > 5:
+            
+            if count > test_number:
                 break
 
-
-    seg_metric.summary_all()
+    # seg_metric.summary_iou()
+    final_metric = seg_metric.summary_all()
     torch.cuda.empty_cache()
+    return final_metric
+
 
 
 def register_evaluate_fn(launcher):
