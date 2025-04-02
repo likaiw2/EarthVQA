@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 
 export PYTHONPATH=$PYTHONPATH:`pwd`
-config_path='sfpnr50'
-model_dir='./log/sfpnr50'
 NUM_GPUS=1
+
+# config_path='sfpnr50'
+# model_dir='./log/sfpnr50'
+
+config_path='sfpnr_on_cityscapes'
+model_dir='./log/sfpnr_on_cityscapes'
+
 
 # python -m torch.distributed.launch --nproc_per_node=${NUM_GPUS} --master_port 29500 train_lovedav2_seg.py \
 #     --config_path=${config_path} \
@@ -15,5 +20,5 @@ python -m debugpy \
     --wait-for-client -m torch.distributed.launch \
     --nproc_per_node=$NUM_GPUS \
     --master_port 29500 train_lovedav2_seg.py \
-    --config_path=sfpnr50 \
-    --model_dir=./log/sfpnr50
+    --config_path=${config_path} \
+    --model_dir=${model_dir} \

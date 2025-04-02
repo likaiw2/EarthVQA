@@ -6,7 +6,8 @@ from tqdm import tqdm
 import random
 import json
 from module import viz
-from data.lovedav2 import COLOR_MAP
+# from data.lovedav2 import COLOR_MAP
+from data.cityscapes import COLOR_MAP
 import argparse
 er.registry.register_all()
 
@@ -60,5 +61,25 @@ def seed_torch(seed=2333):
 
 if __name__ == '__main__':
     seed_torch(42)
-    trainer = er.trainer.get_trainer('th_ddp')()
+    
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('--config_path', default='sfpnr50', type=str, help='path to config file')
+    parser.add_argument('--model_dir', default='./log/sfpnr50', type=str, help='path to model directory')
+    parser.add_argument("--local_rank", type=int, default=None)
+    parser.add_argument('--trainer', default='th_ddp', type=str, help='type of trainer')
+    parser.add_argument('--find_unused_parameters', action='store_true', help='whether to find unused parameters')
+    parser.add_argument('--mixed_precision', default='fp32', type=str, help='datatype', choices=['fp32', 'fp16', 'bf16'])
+    parser.add_argument('--use_wandb', action='store_true', help='whether to use wandb for logging')
+    parser.add_argument('--project', default=None, type=str, help='Project name for init wandb')
+    # command line options
+    parser.add_argument(
+        "opts",
+        help="Modify config options using the command-line",
+        default=None,
+        nargs=argparse.REMAINDER,
+    )
+    
+    
+    trainer = er.trainer.get_trainer('th_ddp',parser)()
     trainer.run(after_construct_launcher_callbacks=[register_evaluate_fn])

@@ -13,6 +13,7 @@ from collections import OrderedDict
 from ever.interface import ConfigurableMixin
 from torch.utils.data import SequentialSampler
 from data import distributed
+# import distributed
 import numpy as np
 import logging
 
@@ -29,11 +30,6 @@ COLOR_MAP = OrderedDict(
     Playground=(165,0,165),
     Pond=(0,185,246),
 )
-
-
-
-
-
 
 class LoveDADataset(Dataset):
     def __init__(self, image_dir, mask_dir, transforms=None):
@@ -113,3 +109,17 @@ class LoveDALoaderV2(DataLoader, ConfigurableMixin):
                 ToTensorV2()
             ]),
         ))
+
+if __name__ == "__main__":
+    dataset = LoveDADataset(image_dir='/home/liw324/code/Segment/EarthVQA/dataset/Train/images_png', mask_dir='/home/liw324/code/Segment/EarthVQA/dataset/Train/masks_png', transforms=None)
+    print(len(dataset))
+    image, meta = dataset[0]
+    print(image.shape)
+    print(meta['imagen'])
+    print(meta['raw_image'].shape)
+    print(meta['mask'].shape)
+    print(meta['mask'])
+    print(np.unique(meta['mask']))
+    print()
+    
+    datasetloader = LoveDALoaderV2()
