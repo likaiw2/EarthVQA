@@ -36,7 +36,9 @@ class SemanticFPN(ERModule):
             loss_dict['mem'] = torch.from_numpy(np.array([mem], dtype=np.float32)).to(self.device)
             return loss_dict
         else:
-            return cls_pred.softmax(dim=1), feat_list[-1]
+            softmax_pred = cls_pred.softmax(dim=1)
+            out = feat_list[-1]
+            return softmax_pred, out
 
 
 

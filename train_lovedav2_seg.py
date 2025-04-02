@@ -11,30 +11,39 @@ from data.cityscapes import COLOR_MAP
 import argparse
 er.registry.register_all()
 
-
+train_class = 19
 
 
 def evaluate_cls_fn(self, test_dataloader, config=None):
     self.model.eval()
-    seg_metric = er.metric.PixelMetric(8, logdir=self._model_dir, logger=self.logger)
+    seg_metric = er.metric.PixelMetric(train_class, logdir=self._model_dir, logger=self.logger)
     vis_dir = os.path.join(self._model_dir, 'vis-{}'.format(self.checkpoint.global_step))
     palette = np.array(list(COLOR_MAP.values())).reshape(-1).tolist()
     viz_op = viz.VisualizeSegmm(vis_dir, palette)
 
 
     with torch.no_grad():
+        count = 0
         for img, ret in tqdm(test_dataloader):
             pred_seg = self.model(img, ret)
             if isinstance(pred_seg, tuple):
-                pred_seg = pred_seg[1]
+                pred_seg = pred_seg[0]
             seg_gt = ret['mask'].cpu().numpy()
             # calculate segmentation accuracy
             pred_seg = pred_seg.argmax(dim=1).cpu().numpy()
             valid_inds = seg_gt != -1
+            
+            # print("seg_gt shape:", seg_gt.shape)
+            # print("pred_seg shape:", pred_seg.shape)
+            # print("valid_inds shape:", valid_inds.shape)
+            
             seg_metric.forward(seg_gt[valid_inds], pred_seg[valid_inds])
 
             for pred_seg_i, imagen_i in zip(pred_seg, ret['imagen']):
                 viz_op(pred_seg_i, imagen_i.replace('jpg', 'png'))
+            count += 1
+            if count > 5:
+                break
 
 
     seg_metric.summary_all()
@@ -83,3 +92,4 @@ if __name__ == '__main__':
     
     trainer = er.trainer.get_trainer('th_ddp',parser)()
     trainer.run(after_construct_launcher_callbacks=[register_evaluate_fn])
+    

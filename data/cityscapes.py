@@ -125,27 +125,39 @@ class CityscapesLoader(DataLoader, ConfigurableMixin):
 
 
 if __name__ == "__main__":
-    dataset = CityscapesDataset(image_dir='/data/likai/cityscapes/leftImg8bit/train', mask_dir='/data/likai/cityscapes/gtFine/train', transforms=None)
+    dataset = CityscapesDataset(image_dir='/data/likai/cityscapes/leftImg8bit/test', mask_dir='/data/likai/cityscapes/gtFine/test', transforms=None)
     print(len(dataset))
     image, meta = dataset[0]
     print(image.shape)
     print(meta['imagen'])
     print(meta['raw_image'].shape)
     print(meta['mask'].shape)
-    print(meta['mask'])
+    # print(meta['mask'])
     print(np.unique(meta['mask']))
     print()
-    
-    datasetloader = DataLoader(dataset, batch_size=1, shuffle=True)
-    for image, meta in datasetloader:
-        print(image.shape)
-        print(meta['imagen'])
-        print(meta['raw_image'].shape)
-        print(meta['mask'].shape)
-        print(meta['mask'])
-        print(np.unique(meta['mask']))
-        break
-    
-    
-    # for i in CSLabels.labels:
-    #     print(i)
+
+    # config = dict({
+    #     'image_dir': '/data/likai/cityscapes/leftImg8bit/test',
+    #     'mask_dir': '/data/likai/cityscapes/gtFine/test',
+    #     'batch_size': 1,
+    #     'num_workers': 1,
+    #     'training': False,
+    #     'transforms': Compose([
+    #         Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5), max_pixel_value=255),
+    #         ToTensorV2()
+    #     ])
+    # })
+
+    # # 初始化 CityscapesLoader
+    # loader = CityscapesLoader(config)
+
+    # # 获取一个 batch
+    # for images, metas in loader:
+    #     print("Image batch shape:", images.shape)   # [B, 3, H, W]
+    #     # print("Image unique values:", np.unique(images.numpy()))
+    #     print("Mask batch shape:", metas['mask'].shape)  # [B, H, W]
+    #     print("Mask unique values:", np.unique(metas['mask'].numpy()))
+    #     print("Raw image shape:", metas['raw_image'].shape)
+    #     print("Image filenames:", metas['imagen'])
+    #     print()
+    #     break
