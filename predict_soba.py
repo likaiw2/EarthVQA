@@ -14,11 +14,18 @@ er.registry.register_all()
 
 parser = argparse.ArgumentParser(description='Eval methods')
 parser.add_argument('--ckpt_path',  type=str,
-                    help='ckpt path', default='./log/deeplabv3p.pth')
+                    help='ckpt path', 
+                    default='./weights/soba.pth'
+                    )
 parser.add_argument('--config_path',  type=str,
-                    help='config path', default='baseline.deeplabv3p')
+                    help='config path', 
+                    # default='baseline.deeplabv3p',
+                    default='soba',
+                    )
 parser.add_argument('--pred_save_path',  type=str,
-                    help='pred_save_path', default='./test.json/')
+                    help='pred_save_path',
+                    default='./log/test.json'
+                    )
 
 args = parser.parse_args()
 
