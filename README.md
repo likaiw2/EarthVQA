@@ -41,13 +41,18 @@ pip install ever-beta
 pip install git+https://github.com/qubvel/segmentation_models.pytorch
 pip install albumentations==1.4.3 # This version is important for our repo.
 ```
+or just install by `requirement.txt`
+```
+pip install -r #Classification_task/requirements.txt
+```
 - Run the "EarthVQA Demo"
 ```
 streamlit run \#EarthVQA_demo/earthvqa_app.py --server.port 8501 --server.headless true
 ```
 
 
-### For DSCI-498 "A VQA model of remote sensing field"
+
+### For DSCI-441 "A Classification model of remote sensing field"
 - Install the environment
 ```
 pip install -r \#Classification_task/requirements.txt
