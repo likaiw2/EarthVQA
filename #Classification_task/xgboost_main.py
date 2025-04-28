@@ -83,6 +83,21 @@ def train_classifier(args):
 
     from xgboost import callback
 
+    # Optionally apply PCA before XGBoost
+    pca = None
+    if getattr(args, 'use_pca', False):
+        from sklearn.decomposition import PCA
+        print("Applying PCA before XGBoost...")
+        pca = PCA(n_components=0.99, svd_solver='full', random_state=42)
+        X_train = pca.fit_transform(X_train)
+        X_val = pca.transform(X_val)
+        # Save PCA explained variance info
+        explained_variance = pca.explained_variance_ratio_
+        cumulative_explained_variance = np.cumsum(explained_variance)
+        np.save(os.path.join(args.output_dir, 'pca_explained_variance_ratio_xgb.npy'), explained_variance)
+        np.save(os.path.join(args.output_dir, 'pca_cumulative_explained_variance_xgb.npy'), cumulative_explained_variance)
+        print(f"PCA reduced feature dimension: {X_train.shape[1]}")
+
     clf = XGBClassifier(
         objective='binary:logistic',
         n_estimators=500,           # 500 is the best in 100,200,300,400,500
@@ -102,8 +117,14 @@ def train_classifier(args):
     y_pred = clf.predict(X_val)
     print("Val Accuracy:", accuracy_score(y_val, y_pred))
     print(classification_report(y_val, y_pred))
-    joblib.dump(clf, os.path.join(args.output_dir, 'xgb_model.joblib'))
-    print(f"Model saved to {args.output_dir}")
+
+    os.makedirs(args.output_dir, exist_ok=True)
+    if getattr(args, 'use_pca', False):
+        joblib.dump((pca, clf), os.path.join(args.output_dir, 'xgb_model_pca.joblib'))
+        print(f"XGBoost+PCA model saved to {args.output_dir}")
+    else:
+        joblib.dump(clf, os.path.join(args.output_dir, 'xgb_model.joblib'))
+        print(f"XGBoost model saved to {args.output_dir}")
 
 # ---------------------- Predict Single Image ----------------------
 def predict_image(args):
@@ -149,6 +170,8 @@ def main():
     parser.add_argument('--step', type=str, choices=['extract','train','predict','all'], 
                         default='train')
     parser.add_argument('--predict_image', type=str, 
+                        default=None)
+    parser.add_argument('--use_pca', action='store_true', help='Apply PCA before XGBoost if set', 
                         default=None)
     args = parser.parse_args()
 

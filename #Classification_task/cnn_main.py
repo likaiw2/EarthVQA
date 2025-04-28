@@ -23,6 +23,7 @@ from dataset import LoveDADataset
 from tqdm import tqdm
 
 from sklearn.metrics import accuracy_score
+import matplotlib.pyplot as plt
 
 # ---------------------- Train CNN Classifier ----------------------
 def train_classifier(args):
@@ -117,6 +118,31 @@ def predict_image(args):
         _, pred = torch.max(outputs, 1)
     label = int(pred.item())
     print(f"Predicted label: {label} ({'Urban' if label==1 else 'Rural'})")
+
+    # --------------- CNN特征图可视化 ----------------
+    import matplotlib.pyplot as plt
+
+    # Extract features from the penultimate layer (before fc)
+    # To do this, we can create a new model that outputs features
+    feature_extractor = torch.nn.Sequential(*list(model.children())[:-1])  # all layers except last fc
+    feature_extractor = feature_extractor.to(device)
+    feature_extractor.eval()
+    with torch.no_grad():
+        features = feature_extractor(img_t)
+    features = features.view(features.size(0), -1)  # flatten to (1, 2048)
+
+    features_np = features.squeeze(0).cpu().numpy()  # (2048,)
+
+    # To visualize, we can reshape to (32, 64) for a rough 2D image
+    feature_map = features_np.reshape(32, 64)
+
+    fig, ax = plt.subplots(figsize=(8, 6))
+    cax = ax.imshow(feature_map, aspect='auto', cmap='viridis')
+    fig.colorbar(cax)
+    ax.set_title('CNN Extracted Feature Map')
+    ax.axis('off')
+
+    plt.show()
 
 # ---------------------- Main ----------------------
 def main():
