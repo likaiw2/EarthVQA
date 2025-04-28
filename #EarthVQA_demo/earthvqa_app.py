@@ -42,7 +42,7 @@ parser.add_argument('--config_path',  type=str,
                     )
 parser.add_argument('--save_dir',  type=str,
                     help='save dir', 
-                    default='/home/liw324/code/Segment/EarthVQA/streamlit_script/out'
+                    default='/home/liw324/code/Segment/EarthVQA/#EarthVQA_demo/out'
                     )
 parser.add_argument('--image_path', 
                     type=str, 
@@ -90,13 +90,14 @@ def create_legend(color_map, box_size=(30, 30), font_size=20):
 
     return legend_img
 
-st.set_page_config(page_title="EarthVQA 遥感图像问答", layout="wide")
+st.set_page_config(page_title="EarthVQA Demo", layout="wide")
 
-st.title("🌍 EarthVQA Demo")
-
-# 上传遥感图像
-st.caption("Upload a remote sensing image to start segmentation and Q&A")
-uploaded_file = st.file_uploader("", type=["png", "jpg", "jpeg"], label_visibility="collapsed")
+col1, col2, col3 = st.columns([3, 1, 3])  # 中间一个窄列
+with col1:
+    st.title("🌍 EarthVQA Demo")
+    st.caption("Upload a remote sensing image to start segmentation and Q&A")
+with col3:
+    uploaded_file = st.file_uploader("", type=["png", "jpg", "jpeg"], label_visibility="collapsed")
 
 if uploaded_file:
     image = Image.open(uploaded_file).convert("RGB")
@@ -130,4 +131,4 @@ if uploaded_file:
     if question:
         with st.spinner("Thinking..."):
             answer = predict_soba(hdf_path, question)
-            st.success(f"The output of EarthVQA：{answer}")
+            st.success(f"The output of EarthVQA: {answer}")

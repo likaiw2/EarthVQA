@@ -6,7 +6,7 @@ My project based on EarthVQA, a paper in ResearchGate, which is mainly focus on 
 Here are the summary of my project.
 
 ## Project Title
-Anvanced EarthVQA
+A VQA model of remote sensing field
 
 ## Project Abstract
 Last semester, all of my projects are about climate change. As I wrote in the descrpition, I am very interested in the combination between machine learning and atmosphere, geology, earth science. So, this semester I decide to do something about these topics.
@@ -24,3 +24,19 @@ The second part will combine the visual segmentation features and text features,
 - Also, some related dataset:
     - [RS-CQMA (Global-TQA)](https://github.com/shenyedepisa/RSCMQA?tab=readme-ov-file)
     - [EarthMaker](https://github.com/wivizhang/EarthMarker)
+
+## How to run the code
+
+### For DSCI-498 "A VQA model of remote sensing field"
+- Install the environment
+```
+pip install ever-beta
+pip install git+https://github.com/qubvel/segmentation_models.pytorch
+pip install albumentations==1.4.3 # This version is important for our repo.
+```
+- Run the "EarthVQA Demo"
+```
+streamlit run \#EarthVQA_demo/earthvqa_app.py --server.port 8501 --server.headless true
+```
+
+
